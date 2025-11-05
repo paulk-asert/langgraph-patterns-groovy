@@ -21,8 +21,5 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 @SpringBootApplication
 @EnableAgents(loggingTheme = LoggingThemes.COLOSSUS)
 void main() {
-    try(var context = SpringApplication.run(PatternsApplication)) {
-        println 'starting up'
-        sleep 10000
-    }
+    SpringApplication.run(PatternsApplication)
 }
