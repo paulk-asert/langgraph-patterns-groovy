@@ -24,7 +24,7 @@ plugins {
 
 repositories {
     mavenCentral()
-                                                                                                                                maven { url = 'https://repo.embabel.com/artifactory/libs-snapshot' }
+    maven { url = 'https://repo.embabel.com/artifactory/libs-snapshot' }
 }
 
 java {
