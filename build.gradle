@@ -17,7 +17,6 @@
 plugins {
     id 'com.github.ben-manes.versions' version '0.53.0'
     id 'groovy'
-    id 'application'
     id 'org.springframework.boot' version '3.5.6'
     id 'io.spring.dependency-management' version '1.1.7'
 }
@@ -42,10 +41,6 @@ tasks.withType(GroovyCompile) {
     groovyOptions.parameters = true
 }
 
-application {
-    mainClass = 'patterns.PatternsApplication'
-}
-
 var embabelVersion = '0.2.0-SNAPSHOT'
 
 dependencies {
@@ -54,4 +49,18 @@ dependencies {
     implementation "com.embabel.agent:embabel-agent-api:$embabelVersion"
     implementation "com.embabel.agent:embabel-agent-starter-shell:$embabelVersion"
     implementation "com.embabel.agent:embabel-agent-starter-ollama:$embabelVersion"
+}
+
+sourceSets.test.allSource.filter{ it.name.endsWith('.groovy') }.each { source ->
+    var name = source.toURI().toString().replaceAll('.*/src/test/groovy/(.*)\\.groovy', '$1')
+    if (!name.contains('Application')) return
+    name = name.replaceAll('/', '.')
+    tasks.register("run.$name", JavaExec) {
+        dependsOn compileGroovy
+        group = 'Application'
+        description = "Run $source.name as a JVM application/Groovy script"
+        classpath = sourceSets.test.runtimeClasspath
+        mainClass = name
+        jvmArgs = ['--enable-native-access=ALL-UNNAMED'] // avoid warning on JDK25
+    }
 }

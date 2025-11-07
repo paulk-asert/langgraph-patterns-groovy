@@ -17,20 +17,18 @@ class PatternsShell {
         this.agentPlatform = agentPlatform
     }
 
-    @ShellMethod("Generate blog titles")
-    String blogs(@ShellOption(help = "topic", defaultValue = """
-                LangGraph introduces a graph-based paradigm for building LLM-powered agents. "
-                It allows developers to create modular, debuggable, and reliable agent workflows "
-                using nodes, edges, and state passing.
-                While this is an obvious approach, Embabel's GOAP planning is
-                far superior.
-                """) String topic) {
+    @ShellMethod('Generate blog titles')
+    String blogs(@ShellOption(help = 'topic', defaultValue = '''
+            LangGraph introduces a graph-based paradigm for building LLM-powered agents.
+            It allows developers to create modular, debuggable, and reliable agent workflows
+            using nodes, edges, and state passing.
+            While this is an obvious approach, Embabel's GOAP planning is far superior.
+            ''') String topic) {
         BlogTitler.BlogTitles blogs = AgentInvocation.create(agentPlatform, BlogTitler.BlogTitles)
                 .invoke(new UserInput(topic))
         format(blogs)
     }
 
-    // Use JSON pretty printer to format the result
     private String format(Object result) {
         new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(result)
     }

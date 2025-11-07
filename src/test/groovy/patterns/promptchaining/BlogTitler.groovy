@@ -15,23 +15,15 @@ class BlogTitler {
     private final Actor<?> techWriter = new Actor<>('''
             You are an expert technical writer. Always give clear,
             concise, and straight-to-the-point answers.
-            ''',
-            LlmOptions.withAutoLlm())
+            ''', LlmOptions.withAutoLlm())
 
-    record Topics(
-            List<String> topics
-    ) {
+    record Topics(List<String> topics) {
     }
 
-    record TopicTitles(
-            String topic,
-            List<String> titles
-    ) {
+    record TopicTitles(String topic, List<String> titles) {
     }
 
-    record BlogTitles(
-            List<TopicTitles> topicTitles
-    ) {
+    record BlogTitles(List<TopicTitles> topicTitles) {
     }
 
     @Action
@@ -58,5 +50,4 @@ class BlogTitler {
                         """))
         new BlogTitles(titles)
     }
-
 }
