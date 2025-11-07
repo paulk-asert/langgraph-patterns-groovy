@@ -32,11 +32,6 @@ java {
     }
 }
 
-tasks.withType(JavaExec) {
-    jvmArgs = ['--enable-native-access=ALL-UNNAMED'] // avoid warning on JDK25
-    standardInput = System.in
-}
-
 tasks.withType(GroovyCompile) {
     groovyOptions.parameters = true
 }
@@ -62,5 +57,6 @@ sourceSets.test.allSource.filter{ it.name.endsWith('.groovy') }.each { source ->
         classpath = sourceSets.test.runtimeClasspath
         mainClass = name
         jvmArgs = ['--enable-native-access=ALL-UNNAMED'] // avoid warning on JDK25
+        standardInput = System.in
     }
 }
