@@ -25,7 +25,9 @@ class SumTypeTransformHelper implements ASTTransformation {
                     var outer = cn.outerClass
                     String enumName = anno.getMember('enumName')?.text ?: name + 'Type'
                     cn.methods.each {
-                        var variant = new InnerClassNode(outer, "$outer.name\$$it.name", ACC_PUBLIC | ACC_FINAL | ACC_STATIC, ClassHelper.OBJECT_TYPE)
+                        var variant = outer
+                            ? new InnerClassNode(outer, "$outer.name\$$it.name", ACC_PUBLIC | ACC_FINAL | ACC_STATIC, ClassHelper.OBJECT_TYPE)
+                            : new ClassNode(it.name, ACC_PUBLIC | ACC_FINAL | ACC_STATIC, ClassHelper.OBJECT_TYPE)
                         variant.addInterface(cn)
                         cn.module.addImport(it.name, variant)
                     }
