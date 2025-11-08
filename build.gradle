@@ -38,14 +38,30 @@ tasks.withType(GroovyCompile) {
 
 var embabelVersion = '0.2.0-SNAPSHOT'
 
+// AST transforms should be compiled before the compiler is started, so, as a convenience,
+// we put our transform in main and Embabel App in test. Then Gradle will set up the classpath correctly.
+// We could alternatively use two subprojects.
 dependencies {
     implementation 'org.apache.groovy:groovy:5.0.2'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation "com.embabel.agent:embabel-agent-api:$embabelVersion"
-    implementation "com.embabel.agent:embabel-agent-starter-shell:$embabelVersion"
-    implementation "com.embabel.agent:embabel-agent-starter-ollama:$embabelVersion"
+    implementation "com.fasterxml.jackson.core:jackson-annotations:2.20"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-web'
+    testImplementation "com.embabel.agent:embabel-agent-api:$embabelVersion"
+    testImplementation "com.embabel.agent:embabel-agent-starter-shell:$embabelVersion"
+    testImplementation "com.embabel.agent:embabel-agent-starter-ollama:$embabelVersion"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.14.1'
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.14.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.14.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-engine:1.14.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-runner:1.14.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-commons:1.14.1'
 }
 
+test {
+    useJUnitPlatform()
+}
+
+// set up a run task for any Groovy script with "Application" in the name
 sourceSets.test.allSource.filter{ it.name.endsWith('.groovy') }.each { source ->
     var name = source.toURI().toString().replaceAll('.*/src/test/groovy/(.*)\\.groovy', '$1')
     if (!name.contains('Application')) return
